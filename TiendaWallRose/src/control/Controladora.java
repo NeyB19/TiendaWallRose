@@ -70,4 +70,76 @@ public class Controladora {
         
         throw new Exception("Error: No existe un cliente con esa ID");
     }
-}
+    
+ // MÉTODOS DE PRODUCTOS
+
+    public List<Producto> obtenerListadoProductos() {
+        ArrayList<Producto> listaDeProductos = new ArrayList<>(this.productos.values());
+        return listaDeProductos;
+    }
+
+    public void crearProducto(String nombre, float existencias, String unidad, double precio) {
+        Producto nuevo = new Producto(nombre, existencias, unidad, precio);
+        this.productos.put(nuevo.getCodigo(), nuevo);
+    }
+
+    public Producto obtenerProducto(int codigoProducto) throws Exception {
+        if (this.productos.containsKey(codigoProducto)) {
+            return this.productos.get(codigoProducto);
+        }
+        throw new Exception("Error: El producto con ese código no existe.");
+    }
+
+    public void actualizarProducto(int codigo, String nombre, float existencias, String unidad, double precio) throws Exception {
+        Producto p = obtenerProducto(codigo);
+        p.setNombre(nombre);
+        p.setExistencias(existencias);
+        p.setUnidad(unidad);
+        p.setPrecio(precio);
+    }
+
+    public void borrarProducto(int codigo) throws Exception {
+        if (this.productos.containsKey(codigo)) {
+            this.productos.remove(codigo);
+            return;
+        }
+        throw new Exception("Error: Producto no encontrado para borrar.");
+    }
+
+    // MÉTODOS DE ÓRDENES 
+
+    public List<OrdenCompra> obtenerListadoOrdenes() {
+        ArrayList<OrdenCompra> listaDeOrdenes = new ArrayList<>(this.ordenes.values());
+        return listaDeOrdenes;
+    }
+
+    public OrdenCompra obtenerOrden(int numero) throws Exception {
+        if (this.ordenes.containsKey(numero)) {
+            return this.ordenes.get(numero);
+        }
+        throw new Exception("Error: Esa orden no existe en el sistema.");
+    }
+
+    public void crearOrdenVacia(String idCliente) throws Exception {
+        Cliente cliente = obtenerCliente(idCliente);
+        OrdenCompra nueva = new OrdenCompra(cliente);
+        
+        cliente.agregarOrden(nueva);
+        this.ordenes.put(nueva.getNumero(), nueva);
+    }
+
+    public void borrarOrdenCompra(int numero) throws Exception {
+        OrdenCompra orden = obtenerOrden(numero);
+        orden.getCliente().borrarOrden(numero);
+        this.ordenes.remove(numero);
+    }
+
+    public void establecerOrdenPendiente(int numero) throws Exception {
+        obtenerOrden(numero).pasarAOrdenPendiente();
+    }
+
+    public void establecerOrdenTerminada(int numero) throws Exception {
+        obtenerOrden(numero).terminarOrden();
+    }
+
+ }
