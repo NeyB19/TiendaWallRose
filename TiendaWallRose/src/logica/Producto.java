@@ -8,7 +8,7 @@ public class Producto {
     private String unidad;
     private double precio;
 
-    public Producto(int codigoProducto, String nombre, float existencias, String unidad, double precio) {
+    public Producto(String nombre, float existencias, String unidad, double precio) {
         codigoProducto = consecutivo++;
         this.nombre = nombre;
         this.existencias = existencias;

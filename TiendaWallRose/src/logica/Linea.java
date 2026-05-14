@@ -44,7 +44,7 @@ public class Linea {
 
  
     public String toString() {
-        return "\n  DETALLE DE LÍNEA " +
+        return "\n  DETALLE DE LA LÍNEA: " +
                "\nProducto: " + this.producto.getNombre() +
                "\nCantidad: " + cantidad +
                "\nPrecio unitario: " + this.producto.getPrecio() +
