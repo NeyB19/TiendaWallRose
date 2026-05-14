@@ -4,12 +4,12 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class Cliente {
-    private int id;
+    private String id;
     private String nombre;
     private String email;
     private Map<Integer, OrdenCompra> ordenes;
 
-    public Cliente(int id, String nombre, String email) {
+    public Cliente(String id, String nombre, String email) {
         this.id = id;
         this.nombre = nombre;
         this.email = email;
@@ -55,7 +55,7 @@ public class Cliente {
 
     // GETTERS Y SETTERS
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
