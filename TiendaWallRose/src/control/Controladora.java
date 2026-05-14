@@ -142,4 +142,71 @@ public class Controladora {
         obtenerOrden(numero).terminarOrden();
     }
 
+    // MÉTODOS DE LÍNEAS
+
+    public void agregarLinea(int numeroOrden, int codigoProducto, double cantidad) throws Exception {
+        OrdenCompra orden = obtenerOrden(numeroOrden);
+        Producto producto = obtenerProducto(codigoProducto);
+        orden.agregarLinea(producto, cantidad);
+    }
+
+    public void actualizarLinea(int numeroOrden, int numeroLinea, int codigoProducto, double cantidad) throws Exception {
+        OrdenCompra orden = obtenerOrden(numeroOrden);
+        Producto producto = obtenerProducto(codigoProducto);
+        
+        if (numeroLinea >= 0 && numeroLinea < orden.getLineas().size()) {
+            orden.getLineas().remove(numeroLinea);
+            orden.getLineas().add(numeroLinea, new Linea(producto, cantidad));
+            return;
+        }
+        throw new Exception("Error: La línea es inválida");
+    }
+
+    public void borrarLinea(int numeroOrden, int numeroLinea) throws Exception {
+        obtenerOrden(numeroOrden).borrarLinea(numeroLinea);
+    }
+
+    public List<Linea> obtenerlineasOrden(int numero) throws Exception {
+        return obtenerOrden(numero).getLineas();
+    }
+
+    // OTROS
+
+    public double obtenerMontoTotalPendiente() {
+        double total = 0;
+        for (OrdenCompra o : this.ordenes.values()) {
+            if (o.getEstado().equalsIgnoreCase("Pendiente")) {
+                total += o.calcularMontoTotal();
+            }
+        }
+        return total;
+    }
+
+    public List<OrdenCompra> obtenerListadoOrdenesCliente(String id) throws Exception {
+        return new ArrayList<>(obtenerCliente(id).getOrdenes().values());
+    }
+
+    public List<OrdenCompra> obtenerListadoOrdenesIniciadasCliente(String id) throws Exception {
+        List<OrdenCompra> listaFiltrada = new ArrayList<>();
+        for (OrdenCompra o : obtenerListadoOrdenesCliente(id)) {
+            if (o.getEstado().equalsIgnoreCase("Iniciada")) listaFiltrada.add(o);
+        }
+        return listaFiltrada;
+    }
+
+    public List<OrdenCompra> obtenerListadoOrdenesPendientesCliente(String id) throws Exception {
+        List<OrdenCompra> listaFiltrada = new ArrayList<>();
+        for (OrdenCompra o : obtenerListadoOrdenesCliente(id)) {
+            if (o.getEstado().equalsIgnoreCase("Pendiente")) listaFiltrada.add(o);
+        }
+        return listaFiltrada;
+    }
+
+    public List<OrdenCompra> obtenerListadoOrdenesTerminadasCliente(String id) throws Exception {
+        List<OrdenCompra> listaFiltrada = new ArrayList<>();
+        for (OrdenCompra o : obtenerListadoOrdenesCliente(id)) {
+            if (o.getEstado().equalsIgnoreCase("Terminada")) listaFiltrada.add(o);
+        }
+        return listaFiltrada;
+    }
  }
