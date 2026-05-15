@@ -85,7 +85,28 @@ public class OrdenCompra {
         return this.cliente;
     }
 
-    @Override
+    public void setImpuesto(double nuevoImpuesto) throws Exception {
+        if (nuevoImpuesto >= 0) {
+            this.impuesto = nuevoImpuesto;
+            return;
+        }      
+        throw new Exception("Error: El impuesto no puede ser un valor negativo.");
+    }
+    
+    public int cantidadLineas() {
+        int totalDeLineas = this.lineas.size();
+        return totalDeLineas;
+    }
+
+    public Linea getLinea(int numeroLinea) throws Exception {
+        int lista = this.lineas.size();
+        if (numeroLinea < 0 || numeroLinea >= lista) {
+            throw new Exception("Error: El número de línea no es válido.");
+        }
+        Linea lineaEncontrada = this.lineas.get(numeroLinea);
+        return lineaEncontrada;
+    }
+    
     public String toString() {
         return "\n  ORDEN DE COMPRA #" + numero +
                "\nFecha: " + fecha +
@@ -93,7 +114,7 @@ public class OrdenCompra {
                "\nCliente: " + cliente.getNombre() +
                "\nTotal de productos: " + lineas.size() +
                "\nSubtotal: " + calcularMonto() +
-               "\nImpuestos (13%): " + calcularMontoImpuesto() +
+               "\nImpuesto: " + calcularMontoImpuesto() +
                "\nTOTAL FINAL: " + calcularMontoTotal() +
                "\n----------------------------";
     }

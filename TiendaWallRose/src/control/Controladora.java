@@ -99,13 +99,14 @@ public class Controladora {
     }
 
     public void borrarProducto(int codigo) throws Exception {
-        if (this.productos.containsKey(codigo)) {
-            this.productos.remove(codigo);
-            return;
+        this.obtenerProducto(codigo); 
+        boolean enUso = this.estaProductoEnUso(codigo);
+        if (enUso == true) {
+            throw new Exception("Error: El producto no se puede borrar porque está en uso en una orden.");
         }
-        throw new Exception("Error: Producto no encontrado para borrar.");
+        this.productos.remove(codigo);
     }
-
+    
     // MÉTODOS DE ÓRDENES 
 
     public List<OrdenCompra> obtenerListadoOrdenes() {
@@ -208,5 +209,34 @@ public class Controladora {
             if (o.getEstado().equalsIgnoreCase("Terminada")) listaFiltrada.add(o);
         }
         return listaFiltrada;
+    }
+    
+    public double obtenerMontoTotalPendientesCliente(String idCliente) throws Exception {
+        Cliente clienteInteres = this.obtenerCliente(idCliente);
+        double totalPendientes = 0;
+        Map<Integer, OrdenCompra> ordenesCliente = clienteInteres.getOrdenes();
+        for (OrdenCompra orden : ordenesCliente.values()) {
+            String estadoOrden = orden.getEstado();
+            if (estadoOrden.equalsIgnoreCase("Pendiente")) {
+                double totalOrden = orden.calcularMontoTotal();               
+                totalPendientes = totalPendientes + totalOrden;
+            }
+        }     
+        return totalPendientes;
+    }
+    
+    private boolean estaProductoEnUso(int codigo) {
+        List<OrdenCompra> todasLasOrdenes = this.obtenerListadoOrdenes();
+        for (OrdenCompra orden : todasLasOrdenes) {
+            ArrayList<Linea> lineas = orden.getLineas();
+            for (Linea linea : lineas) {
+                Producto p = linea.getProducto();
+                if (p.getCodigo() == codigo) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
     }
  }
