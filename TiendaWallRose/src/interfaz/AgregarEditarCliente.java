@@ -38,7 +38,7 @@ public class AgregarEditarCliente extends JDialog {
 	 * Create the dialog.
 	 */
 	public AgregarEditarCliente() {
-		setTitle("Nuevo/Editar Cliente");
+		setTitle("Agregar/Editar Cliente");
 		setModal(true);
 		setBounds(100, 100, 382, 265);
 		getContentPane().setLayout(new BorderLayout());

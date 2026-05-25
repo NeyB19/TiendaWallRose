@@ -35,7 +35,8 @@ public class InformacionCliente extends JDialog {
 	 * Create the dialog.
 	 */
 	public InformacionCliente() {
-		setTitle("Información del cliente");
+		setModal(true);
+		setTitle("Información del Cliente");
 		setBounds(100, 100, 496, 371);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -75,7 +76,7 @@ public class InformacionCliente extends JDialog {
 		contentPanel.add(scrollPane_OrdenesCliente);
 		
 		tableOrdenesDelCliente = new JTable();
-		tableOrdenesDelCliente.setModel(new DefaultTableModel(
+		DefaultTableModel dataModel = new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
@@ -88,7 +89,8 @@ public class InformacionCliente extends JDialog {
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
-		});
+		};
+		tableOrdenesDelCliente.setModel(dataModel);
 		tableOrdenesDelCliente.getColumnModel().getColumn(0).setPreferredWidth(97);
 		tableOrdenesDelCliente.getColumnModel().getColumn(1).setPreferredWidth(116);
 		tableOrdenesDelCliente.getColumnModel().getColumn(2).setPreferredWidth(118);
