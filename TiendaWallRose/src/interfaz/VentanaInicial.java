@@ -14,7 +14,7 @@ import javax.swing.JLabel;
 
 public class VentanaInicial {
 
-	private JFrame frame;
+	private JFrame frmTiendaWallrose;
 	private JTable tablaClientes;
 	private JTable tablaOrdenes;
 	private JTable tablaProductos;
@@ -27,7 +27,7 @@ public class VentanaInicial {
 			public void run() {
 				try {
 					VentanaInicial window = new VentanaInicial();
-					window.frame.setVisible(true);
+					window.frmTiendaWallrose.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -46,14 +46,15 @@ public class VentanaInicial {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setResizable(false);
-		frame.setBounds(100, 100, 615, 398);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+		frmTiendaWallrose = new JFrame();
+		frmTiendaWallrose.setTitle("Tienda WallRose");
+		frmTiendaWallrose.setResizable(false);
+		frmTiendaWallrose.setBounds(100, 100, 615, 398);
+		frmTiendaWallrose.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmTiendaWallrose.getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
+		frmTiendaWallrose.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		
 		JPanel panelDeClientes = new JPanel();
 		tabbedPane.addTab("Clientes", null, panelDeClientes, null);
@@ -142,6 +143,10 @@ public class VentanaInicial {
 		JLabel lblTotalPendiente = new JLabel("Total pendiente:");
 		lblTotalPendiente.setBounds(10, 308, 94, 14);
 		panelDeOrdenes.add(lblTotalPendiente);
+		
+		JLabel lblTotalPendienteOrdenes = new JLabel("New label");
+		lblTotalPendienteOrdenes.setBounds(114, 308, 118, 14);
+		panelDeOrdenes.add(lblTotalPendienteOrdenes);
 		
 		JPanel panelDeProductos = new JPanel();
 		tabbedPane.addTab("Productos", null, panelDeProductos, null);

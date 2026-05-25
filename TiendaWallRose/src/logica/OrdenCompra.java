@@ -16,8 +16,8 @@ public class OrdenCompra {
         numero = consecutivo++;
         this.fecha = LocalDateTime.now();
         this.estado = "Iniciada";
-        this.impuesto = 0.13;
         this.cliente = cliente;
+        this.impuesto = 0.13;
         lineas = new ArrayList<Linea>();
     }
 
