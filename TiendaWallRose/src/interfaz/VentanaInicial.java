@@ -10,11 +10,13 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 
 public class VentanaInicial {
 
 	private JFrame frame;
-	private JTable table;
+	private JTable tablaClientes;
+	private JTable tablaOrdenes;
 
 	/**
 	 * Launch the application.
@@ -45,7 +47,7 @@ public class VentanaInicial {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 615, 369);
+		frame.setBounds(100, 100, 615, 398);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
@@ -56,12 +58,12 @@ public class VentanaInicial {
 		tabbedPane.addTab("Clientes", null, panelDeClientes, null);
 		panelDeClientes.setLayout(null);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 458, 282);
-		panelDeClientes.add(scrollPane);
+		JScrollPane scrollPane_Clientes = new JScrollPane();
+		scrollPane_Clientes.setBounds(10, 11, 458, 282);
+		panelDeClientes.add(scrollPane_Clientes);
 		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
+		tablaClientes = new JTable();
+		tablaClientes.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
@@ -75,10 +77,10 @@ public class VentanaInicial {
 				return columnTypes[columnIndex];
 			}
 		});
-		table.getColumnModel().getColumn(0).setPreferredWidth(99);
-		table.getColumnModel().getColumn(1).setPreferredWidth(204);
-		table.getColumnModel().getColumn(2).setPreferredWidth(165);
-		scrollPane.setViewportView(table);
+		tablaClientes.getColumnModel().getColumn(0).setPreferredWidth(99);
+		tablaClientes.getColumnModel().getColumn(1).setPreferredWidth(204);
+		tablaClientes.getColumnModel().getColumn(2).setPreferredWidth(165);
+		scrollPane_Clientes.setViewportView(tablaClientes);
 		
 		JButton btnAgregarCliente = new JButton("Agregar");
 		btnAgregarCliente.setBounds(478, 51, 94, 22);
@@ -97,7 +99,48 @@ public class VentanaInicial {
 		panelDeClientes.add(btnBorrarCliente);
 		
 		JPanel panelDeOrdenes = new JPanel();
-		tabbedPane.addTab("Órdenes", null, panelDeOrdenes, null);
+		tabbedPane.addTab("Órdenes de Compra", null, panelDeOrdenes, null);
+		panelDeOrdenes.setLayout(null);
+		
+		JScrollPane scrollPane_Ordenes = new JScrollPane();
+		scrollPane_Ordenes.setBounds(10, 11, 458, 282);
+		panelDeOrdenes.add(scrollPane_Ordenes);
+		
+		tablaOrdenes = new JTable();
+		tablaOrdenes.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"N\u00FAmero", "Fecha", "Estado"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				Object.class, Object.class, String.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+		});
+		tablaOrdenes.getColumnModel().getColumn(0).setPreferredWidth(99);
+		tablaOrdenes.getColumnModel().getColumn(1).setPreferredWidth(127);
+		tablaOrdenes.getColumnModel().getColumn(2).setPreferredWidth(110);
+		scrollPane_Ordenes.setViewportView(tablaOrdenes);
+		
+		JButton btnNuevaOrden = new JButton("Nueva");
+		btnNuevaOrden.setBounds(478, 51, 94, 22);
+		panelDeOrdenes.add(btnNuevaOrden);
+		
+		JButton btnDetalleOrden = new JButton("Detalle");
+		btnDetalleOrden.setBounds(478, 84, 94, 22);
+		panelDeOrdenes.add(btnDetalleOrden);
+		
+		JButton btnBorrarOrden = new JButton("Borrar");
+		btnBorrarOrden.setBounds(478, 117, 94, 22);
+		panelDeOrdenes.add(btnBorrarOrden);
+		
+		JLabel lblTotalPendiente = new JLabel("Total pendiente:");
+		lblTotalPendiente.setBounds(10, 308, 94, 14);
+		panelDeOrdenes.add(lblTotalPendiente);
 		
 		JPanel panelDeProductos = new JPanel();
 		tabbedPane.addTab("Productos", null, panelDeProductos, null);
