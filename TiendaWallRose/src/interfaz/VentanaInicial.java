@@ -17,6 +17,7 @@ public class VentanaInicial {
 	private JFrame frame;
 	private JTable tablaClientes;
 	private JTable tablaOrdenes;
+	private JTable tablaProductos;
 
 	/**
 	 * Launch the application.
@@ -144,5 +145,44 @@ public class VentanaInicial {
 		
 		JPanel panelDeProductos = new JPanel();
 		tabbedPane.addTab("Productos", null, panelDeProductos, null);
+		panelDeProductos.setLayout(null);
+		
+		JScrollPane scrollPane_Productos = new JScrollPane();
+		scrollPane_Productos.setBounds(10, 11, 460, 290);
+		panelDeProductos.add(scrollPane_Productos);
+		
+		tablaProductos = new JTable();
+		tablaProductos.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"C\u00F3digo", "Nombre", "Existencias", "Unidad", "Precio"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				Integer.class, String.class, Float.class, String.class, Double.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+		});
+		tablaProductos.getColumnModel().getColumn(0).setPreferredWidth(108);
+		tablaProductos.getColumnModel().getColumn(1).setPreferredWidth(154);
+		tablaProductos.getColumnModel().getColumn(2).setPreferredWidth(114);
+		tablaProductos.getColumnModel().getColumn(3).setPreferredWidth(105);
+		tablaProductos.getColumnModel().getColumn(4).setPreferredWidth(99);
+		scrollPane_Productos.setViewportView(tablaProductos);
+		
+		JButton btnAgregarProducto = new JButton("Agregar");
+		btnAgregarProducto.setBounds(480, 51, 94, 22);
+		panelDeProductos.add(btnAgregarProducto);
+		
+		JButton btnEditarProducto = new JButton("Editar");
+		btnEditarProducto.setBounds(480, 84, 94, 22);
+		panelDeProductos.add(btnEditarProducto);
+		
+		JButton btnBorrarProducto = new JButton("Borrar");
+		btnBorrarProducto.setBounds(480, 117, 94, 22);
+		panelDeProductos.add(btnBorrarProducto);
 	}
 }
