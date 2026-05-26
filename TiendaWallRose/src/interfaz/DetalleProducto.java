@@ -6,11 +6,17 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import control.Controladora;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class DetalleProducto extends JDialog {
 
@@ -25,12 +31,15 @@ public class DetalleProducto extends JDialog {
 	private JButton guardarButton;
 	private JButton cancelButton;
 
+	private VentanaInicial ventanaPrincipal;
+	private boolean esAgregar;
+	
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			DetalleProducto dialog = new DetalleProducto();
+			DetalleProducto dialog = new DetalleProducto(null, true);			
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -41,7 +50,9 @@ public class DetalleProducto extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public DetalleProducto() {
+	public DetalleProducto(VentanaInicial ventanaPrincipal, boolean esAgregar) {
+		this.ventanaPrincipal = ventanaPrincipal;
+		this.esAgregar = esAgregar;
 		setTitle("Detalle del Producto");
 		setModal(true); 
 		setBounds(100, 100, 395, 315);
@@ -106,15 +117,86 @@ public class DetalleProducto extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				guardarButton = new JButton("Guardar");
+				guardarButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						guardarDatos();
+					}
+				});
 				guardarButton.setActionCommand("OK");
 				buttonPane.add(guardarButton);
 				getRootPane().setDefaultButton(guardarButton);
 			}
 			{
 				cancelButton = new JButton("Cancelar");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						dispose();
+					}
+				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
 		}
 	}
+
+	private void guardarDatos() {
+		String nombre = textNombre.getText().trim();
+		String existenciasStr = textExistencias.getText().trim();
+		String unidad = comboBoxUnidad.getSelectedItem().toString();
+		String precioStr = textPrecio.getText().trim();
+		
+		if (nombre.isEmpty() || existenciasStr.isEmpty() || precioStr.isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		try {
+			Controladora control = Controladora.getInstance();
+			String mensajeExito;
+			
+			float existencias = Float.parseFloat(existenciasStr);
+			double precio = Double.parseDouble(precioStr);
+			
+			if (esAgregar) {
+				control.crearProducto(nombre, existencias, unidad, precio);
+				mensajeExito = "Producto registrado con éxito.";
+			} else {
+				int codigo = Integer.parseInt(textCodigo.getText().trim());
+				control.actualizarProducto(codigo, nombre, existencias, unidad, precio);
+				mensajeExito = "Producto modificado con éxito.";
+			}
+			
+			JOptionPane.showMessageDialog(null, mensajeExito, "Éxito", JOptionPane.INFORMATION_MESSAGE);
+			dispose(); 
+			
+			if (ventanaPrincipal != null) {
+				ventanaPrincipal.cargarProductos();
+			}
+			
+		} catch (NumberFormatException nfe) {
+			JOptionPane.showMessageDialog(this, "Las existencias y el precio deben ser valores numéricos válidos.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	public JTextField getTextCodigo() {
+		return textCodigo;
+		}
+
+	public JTextField getTextNombre() {
+		return textNombre;
+		}
+
+	public JTextField getTextExistencias() {
+		return textExistencias;
+		}
+	
+	public JTextField getTextPrecio() {
+		return textPrecio;
+		}
+
+	public JComboBox<String> getComboBoxUnidad() {
+		return comboBoxUnidad;
+		}
 }

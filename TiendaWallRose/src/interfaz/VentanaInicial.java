@@ -132,6 +132,79 @@ public class VentanaInicial {
 		
 		ventanaEditar.setVisible(true);
 	}
+	
+	
+	public void cargarProductos() {
+		Controladora control = Controladora.getInstance();
+		DefaultTableModel model = (DefaultTableModel) tablaProductos.getModel();
+		model.setRowCount(0);
+		java.util.List<logica.Producto> listaProductos = control.obtenerListadoProductos();
+		for (logica.Producto prod : listaProductos) {
+			Object[] fila = new Object[] { prod.getCodigo(), prod.getNombre(), prod.getExistencias(), prod.getUnidad(), prod.getPrecio() };
+			model.addRow(fila);
+		}	
+	}
+
+	private void agregarProducto() {
+		DetalleProducto ventanaAgregar = new DetalleProducto(this, true);
+		ventanaAgregar.setTitle("Agregar Producto");
+		
+		ventanaAgregar.getTextCodigo().setText("Autogenerado");
+		ventanaAgregar.getTextCodigo().setEditable(false);
+		
+		ventanaAgregar.setVisible(true);
+	}
+
+	private void editarProducto() {
+		int numeroFila = tablaProductos.getSelectedRow();
+		if (numeroFila == -1) {
+			JOptionPane.showMessageDialog(frmTiendaWallrose, "Debe seleccionar un producto.", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		DefaultTableModel model = (DefaultTableModel) tablaProductos.getModel();
+		String codigo = model.getValueAt(numeroFila, 0).toString();
+		String nombre = model.getValueAt(numeroFila, 1).toString();
+		String existencias = model.getValueAt(numeroFila, 2).toString();
+		String unidad = model.getValueAt(numeroFila, 3).toString();
+		String precio = model.getValueAt(numeroFila, 4).toString();
+		
+		DetalleProducto ventanaEditar = new DetalleProducto(this, false);
+		ventanaEditar.setTitle("Editar Producto");
+		
+		ventanaEditar.getTextCodigo().setText(codigo);
+		ventanaEditar.getTextCodigo().setEditable(false); 
+		ventanaEditar.getTextNombre().setText(nombre);
+		ventanaEditar.getTextExistencias().setText(existencias);
+		ventanaEditar.getComboBoxUnidad().setSelectedItem(unidad);
+		ventanaEditar.getTextPrecio().setText(precio);
+		
+		ventanaEditar.setVisible(true);
+	}
+
+	private void borrarProducto() {
+		int numeroFila = tablaProductos.getSelectedRow();
+		if (numeroFila == -1) {
+			JOptionPane.showMessageDialog(frmTiendaWallrose, "Debe seleccionar un producto.", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		DefaultTableModel model = (DefaultTableModel) tablaProductos.getModel();
+		int codigo = Integer.parseInt(model.getValueAt(numeroFila, 0).toString());
+		String nombre = model.getValueAt(numeroFila, 1).toString();
+		
+		int respuesta = JOptionPane.showConfirmDialog(frmTiendaWallrose, "¿Está seguro de eliminar el producto " + nombre + "?", "Confirmar", JOptionPane.YES_NO_OPTION);
+		
+		if (respuesta == JOptionPane.YES_OPTION) {
+			try {
+				Controladora.getInstance().borrarProducto(codigo); 
+				cargarProductos();
+				JOptionPane.showMessageDialog(frmTiendaWallrose, "Producto eliminado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(frmTiendaWallrose, "Error al borrar producto: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
 
 	/**
 	 * Create the application.
@@ -181,6 +254,10 @@ public class VentanaInicial {
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
+			}
+			
+			public boolean isCellEditable(int rowIndex, int columnIndex) {
+				return false;
 			}
 		});
 		tablaClientes.getColumnModel().getColumn(0).setPreferredWidth(99);
@@ -254,6 +331,10 @@ public class VentanaInicial {
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
+			
+			public boolean isCellEditable(int rowIndex, int columnIndex) {
+				return false;
+			}
 		});
 		tablaOrdenes.getColumnModel().getColumn(0).setPreferredWidth(99);
 		tablaOrdenes.getColumnModel().getColumn(1).setPreferredWidth(127);
@@ -282,6 +363,12 @@ public class VentanaInicial {
 		panelDeOrdenes.add(lblTotalPendienteOrdenes);
 		
 		JPanel panelDeProductos = new JPanel();
+		panelDeProductos.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				cargarProductos();
+			}
+		});
 		tabbedPane.addTab("Productos", null, panelDeProductos, null);
 		panelDeProductos.setLayout(null);
 		
@@ -303,6 +390,10 @@ public class VentanaInicial {
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
+			
+			public boolean isCellEditable(int rowIndex, int columnIndex) {
+				return false;
+			}
 		});
 		tablaProductos.getColumnModel().getColumn(0).setPreferredWidth(108);
 		tablaProductos.getColumnModel().getColumn(1).setPreferredWidth(154);
@@ -312,14 +403,29 @@ public class VentanaInicial {
 		scrollPane_Productos.setViewportView(tablaProductos);
 		
 		JButton btnAgregarProducto = new JButton("Agregar");
+		btnAgregarProducto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				agregarProducto();
+			}
+		});
 		btnAgregarProducto.setBounds(480, 51, 94, 22);
 		panelDeProductos.add(btnAgregarProducto);
 		
 		JButton btnEditarProducto = new JButton("Editar");
+		btnEditarProducto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				editarProducto();
+			}
+		});
 		btnEditarProducto.setBounds(480, 84, 94, 22);
 		panelDeProductos.add(btnEditarProducto);
 		
 		JButton btnBorrarProducto = new JButton("Borrar");
+		btnBorrarProducto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				borrarProducto();
+			}
+		});
 		btnBorrarProducto.setBounds(480, 117, 94, 22);
 		panelDeProductos.add(btnBorrarProducto);
 	}
