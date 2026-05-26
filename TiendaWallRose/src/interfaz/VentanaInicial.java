@@ -36,6 +36,13 @@ public class VentanaInicial {
 	private JButton btnVerCliente;
 	private JButton btnEditarCliente;
 	private JButton btnBorrarCliente;
+	private JLabel lblTotalPendienteOrdenes;
+	private JButton btnNuevaOrden;
+	private JButton btnDetalleOrden;
+	private JButton btnBorrarOrden;
+	private JButton btnAgregarProducto;
+	private JButton btnEditarProducto;
+	private JButton btnBorrarProducto;
 
 	/**
 	 * Launch the application.
@@ -98,7 +105,7 @@ public class VentanaInicial {
 					JOptionPane.showMessageDialog(frmTiendaWallrose, "Cliente eliminado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 				}
 				catch (Exception e) {
-					JOptionPane.showMessageDialog(frmTiendaWallrose, "Error al borrar cliente: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(frmTiendaWallrose, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
@@ -201,10 +208,74 @@ public class VentanaInicial {
 				cargarProductos();
 				JOptionPane.showMessageDialog(frmTiendaWallrose, "Producto eliminado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog(frmTiendaWallrose, "Error al borrar producto: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(frmTiendaWallrose, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
+
+	public void cargarOrdenes() {
+		Controladora control = Controladora.getInstance();
+		DefaultTableModel model = (DefaultTableModel) tablaOrdenes.getModel();
+		model.setRowCount(0);
+		
+		List<logica.OrdenCompra> listaOrdenes = control.obtenerListadoOrdenes();
+		for (logica.OrdenCompra orden : listaOrdenes) {
+			Object[] fila = new Object[] { orden.getNumero(), orden.getFecha(), orden.getEstado() };
+			model.addRow(fila);
+		}
+		
+		try {
+			double totalPendiente = control.obtenerMontoTotalPendiente();
+			lblTotalPendienteOrdenes.setText("¢" + totalPendiente);
+		} catch (Exception e) {
+			lblTotalPendienteOrdenes.setText("Error al calcular");
+		}
+	}
+
+	private void nuevaOrden() {
+		SeleccionarCliente ventanaSeleccion = new SeleccionarCliente(this);
+		ventanaSeleccion.setVisible(true);
+	}
+
+	private void detalleOrden() {
+		int numeroFila = tablaOrdenes.getSelectedRow();
+		if (numeroFila == -1) {
+			JOptionPane.showMessageDialog(frmTiendaWallrose, "Debe seleccionar una orden.", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		DefaultTableModel model = (DefaultTableModel) tablaOrdenes.getModel();
+		int numeroOrden = Integer.parseInt(model.getValueAt(numeroFila, 0).toString());
+		
+		DetalleOrdenCompra ventanaDetalle = new DetalleOrdenCompra(numeroOrden, this);
+		ventanaDetalle.setTitle("Detalle de Órden N° " + numeroOrden);
+		ventanaDetalle.setVisible(true);
+	}
+
+	private void borrarOrden() {
+		int numeroFila = tablaOrdenes.getSelectedRow();
+		if (numeroFila == -1) {
+			JOptionPane.showMessageDialog(frmTiendaWallrose, "Debe seleccionar una orden.", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		DefaultTableModel model = (DefaultTableModel) tablaOrdenes.getModel();
+		int numeroOrden = Integer.parseInt(model.getValueAt(numeroFila, 0).toString());
+		
+		int respuesta = JOptionPane.showConfirmDialog(frmTiendaWallrose, 
+				"¿Está seguro de que desea eliminar la orden N° " + numeroOrden + "?", 
+				"Confirmar", JOptionPane.YES_NO_OPTION);
+				
+		if (respuesta == JOptionPane.YES_OPTION) {
+			try {
+				Controladora.getInstance().borrarOrdenCompra(numeroOrden); 
+				cargarOrdenes(); 
+				JOptionPane.showMessageDialog(frmTiendaWallrose, "Orden eliminada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(frmTiendaWallrose, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}	
 
 	/**
 	 * Create the application.
@@ -310,6 +381,12 @@ public class VentanaInicial {
 		panelDeClientes.add(btnGuardarDatos);
 		
 		JPanel panelDeOrdenes = new JPanel();
+		panelDeOrdenes.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				cargarOrdenes();
+			}
+		});
 		tabbedPane.addTab("Órdenes de Compra", null, panelDeOrdenes, null);
 		panelDeOrdenes.setLayout(null);
 		
@@ -341,15 +418,30 @@ public class VentanaInicial {
 		tablaOrdenes.getColumnModel().getColumn(2).setPreferredWidth(110);
 		scrollPane_Ordenes.setViewportView(tablaOrdenes);
 		
-		JButton btnNuevaOrden = new JButton("Nueva");
+		btnNuevaOrden = new JButton("Nueva");
+		btnNuevaOrden.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				nuevaOrden();
+			}
+		});
 		btnNuevaOrden.setBounds(478, 51, 94, 22);
 		panelDeOrdenes.add(btnNuevaOrden);
 		
-		JButton btnDetalleOrden = new JButton("Detalle");
+		btnDetalleOrden = new JButton("Detalle");
+		btnDetalleOrden.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				detalleOrden();
+			}
+		});
 		btnDetalleOrden.setBounds(478, 84, 94, 22);
 		panelDeOrdenes.add(btnDetalleOrden);
 		
-		JButton btnBorrarOrden = new JButton("Borrar");
+		btnBorrarOrden = new JButton("Borrar");
+		btnBorrarOrden.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				borrarOrden();
+			}
+		});
 		btnBorrarOrden.setBounds(478, 117, 94, 22);
 		panelDeOrdenes.add(btnBorrarOrden);
 		
@@ -358,7 +450,7 @@ public class VentanaInicial {
 		lblTotalPendiente.setBounds(10, 308, 94, 14);
 		panelDeOrdenes.add(lblTotalPendiente);
 		
-		JLabel lblTotalPendienteOrdenes = new JLabel("---");
+		lblTotalPendienteOrdenes = new JLabel("---");
 		lblTotalPendienteOrdenes.setBounds(114, 308, 118, 14);
 		panelDeOrdenes.add(lblTotalPendienteOrdenes);
 		
@@ -402,7 +494,7 @@ public class VentanaInicial {
 		tablaProductos.getColumnModel().getColumn(4).setPreferredWidth(99);
 		scrollPane_Productos.setViewportView(tablaProductos);
 		
-		JButton btnAgregarProducto = new JButton("Agregar");
+		btnAgregarProducto = new JButton("Agregar");
 		btnAgregarProducto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				agregarProducto();
@@ -411,7 +503,7 @@ public class VentanaInicial {
 		btnAgregarProducto.setBounds(480, 51, 94, 22);
 		panelDeProductos.add(btnAgregarProducto);
 		
-		JButton btnEditarProducto = new JButton("Editar");
+		btnEditarProducto = new JButton("Editar");
 		btnEditarProducto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				editarProducto();
@@ -420,7 +512,7 @@ public class VentanaInicial {
 		btnEditarProducto.setBounds(480, 84, 94, 22);
 		panelDeProductos.add(btnEditarProducto);
 		
-		JButton btnBorrarProducto = new JButton("Borrar");
+		btnBorrarProducto = new JButton("Borrar");
 		btnBorrarProducto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				borrarProducto();
