@@ -11,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import java.awt.Font;
 
 public class VentanaInicial {
 
@@ -141,10 +142,11 @@ public class VentanaInicial {
 		panelDeOrdenes.add(btnBorrarOrden);
 		
 		JLabel lblTotalPendiente = new JLabel("Total pendiente:");
+		lblTotalPendiente.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblTotalPendiente.setBounds(10, 308, 94, 14);
 		panelDeOrdenes.add(lblTotalPendiente);
 		
-		JLabel lblTotalPendienteOrdenes = new JLabel("New label");
+		JLabel lblTotalPendienteOrdenes = new JLabel("---");
 		lblTotalPendienteOrdenes.setBounds(114, 308, 118, 14);
 		panelDeOrdenes.add(lblTotalPendienteOrdenes);
 		

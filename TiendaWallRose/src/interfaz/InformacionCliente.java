@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
+import java.awt.Font;
 
 public class InformacionCliente extends JDialog {
 
@@ -44,30 +45,34 @@ public class InformacionCliente extends JDialog {
 		contentPanel.setLayout(null);
 		
 		JLabel lblIDCliente = new JLabel("ID: ");
+		lblIDCliente.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblIDCliente.setBounds(10, 11, 48, 14);
 		contentPanel.add(lblIDCliente);
 		
-		JLabel lblIdentificacionCliente = new JLabel("New label");
-		lblIdentificacionCliente.setBounds(38, 11, 122, 14);
+		JLabel lblIdentificacionCliente = new JLabel("---");
+		lblIdentificacionCliente.setBounds(78, 11, 122, 14);
 		contentPanel.add(lblIdentificacionCliente);
 		
 		JLabel lblNombreCliente = new JLabel("Nombre:");
-		lblNombreCliente.setBounds(10, 30, 48, 14);
+		lblNombreCliente.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblNombreCliente.setBounds(10, 30, 57, 14);
 		contentPanel.add(lblNombreCliente);
 		
 		JLabel lblEmailCliente = new JLabel("Email:");
+		lblEmailCliente.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblEmailCliente.setBounds(10, 49, 48, 14);
 		contentPanel.add(lblEmailCliente);
 		
-		JLabel lblNombreDelCliente = new JLabel("New label");
-		lblNombreDelCliente.setBounds(59, 30, 219, 14);
+		JLabel lblNombreDelCliente = new JLabel("---");
+		lblNombreDelCliente.setBounds(78, 30, 219, 14);
 		contentPanel.add(lblNombreDelCliente);
 		
-		JLabel lblEmailDelCliente = new JLabel("New label");
-		lblEmailDelCliente.setBounds(46, 49, 160, 14);
+		JLabel lblEmailDelCliente = new JLabel("---");
+		lblEmailDelCliente.setBounds(78, 49, 160, 14);
 		contentPanel.add(lblEmailDelCliente);
 		
 		JLabel lblListaOrdenesCliente = new JLabel("Lista de órdenes:");
+		lblListaOrdenesCliente.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblListaOrdenesCliente.setBounds(10, 84, 111, 14);
 		contentPanel.add(lblListaOrdenesCliente);
 		
@@ -113,11 +118,12 @@ public class InformacionCliente extends JDialog {
 		contentPanel.add(btnOrdenesTerminadas);
 		
 		JLabel lblPendiente = new JLabel("Total pendiente: ");
-		lblPendiente.setBounds(10, 276, 85, 14);
+		lblPendiente.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblPendiente.setBounds(10, 276, 99, 14);
 		contentPanel.add(lblPendiente);
 		
-		JLabel lblTotalPendiente = new JLabel("New label");
-		lblTotalPendiente.setBounds(105, 276, 101, 14);
+		JLabel lblTotalPendiente = new JLabel("---");
+		lblTotalPendiente.setBounds(125, 276, 101, 14);
 		contentPanel.add(lblTotalPendiente);
 		{
 			JPanel buttonPane = new JPanel();

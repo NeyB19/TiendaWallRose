@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.Font;
 
 public class DetalleProducto extends JDialog {
 
@@ -50,6 +51,7 @@ public class DetalleProducto extends JDialog {
 		contentPanel.setLayout(null);
 		
 		JLabel lblCodigo = new JLabel("Código:");
+		lblCodigo.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblCodigo.setBounds(50, 35, 70, 14);
 		contentPanel.add(lblCodigo);
 		
@@ -59,6 +61,7 @@ public class DetalleProducto extends JDialog {
 		textCodigo.setColumns(10);
 		
 		JLabel lblNombre = new JLabel("Nombre:");
+		lblNombre.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblNombre.setBounds(50, 75, 70, 14);
 		contentPanel.add(lblNombre);
 		
@@ -68,6 +71,7 @@ public class DetalleProducto extends JDialog {
 		textNombre.setColumns(10);
 		
 		JLabel lblExistencias = new JLabel("Existencias:");
+		lblExistencias.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblExistencias.setBounds(50, 115, 80, 14);
 		contentPanel.add(lblExistencias);
 		
@@ -77,6 +81,7 @@ public class DetalleProducto extends JDialog {
 		textExistencias.setColumns(10);
 		
 		JLabel lblUnidad = new JLabel("Unidad:");
+		lblUnidad.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblUnidad.setBounds(50, 155, 70, 14);
 		contentPanel.add(lblUnidad);
 		
@@ -86,6 +91,7 @@ public class DetalleProducto extends JDialog {
 		contentPanel.add(comboBoxUnidad);
 		
 		JLabel lblPrecio = new JLabel("Precio:");
+		lblPrecio.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblPrecio.setBounds(50, 195, 70, 14);
 		contentPanel.add(lblPrecio);
 		

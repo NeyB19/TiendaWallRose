@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import java.awt.Font;
 
 public class AgregarEditarCliente extends JDialog {
 
@@ -47,16 +48,19 @@ public class AgregarEditarCliente extends JDialog {
 		contentPanel.setLayout(null);
 		{
 			JLabel lblIdentificacion = new JLabel("ID:");
+			lblIdentificacion.setFont(new Font("Tahoma", Font.BOLD, 11));
 			lblIdentificacion.setBounds(78, 48, 48, 14);
 			contentPanel.add(lblIdentificacion);
 		}
 		{
 			JLabel lblNombre = new JLabel("Nombre:");
+			lblNombre.setFont(new Font("Tahoma", Font.BOLD, 11));
 			lblNombre.setBounds(78, 92, 48, 14);
 			contentPanel.add(lblNombre);
 		}
 		{
 			JLabel lblEmail = new JLabel("Email:");
+			lblEmail.setFont(new Font("Tahoma", Font.BOLD, 11));
 			lblEmail.setBounds(78, 142, 48, 14);
 			contentPanel.add(lblEmail);
 		}
