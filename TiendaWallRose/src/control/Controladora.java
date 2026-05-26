@@ -4,12 +4,19 @@ import logica.Cliente;
 import logica.Linea;
 import logica.Producto;
 import logica.OrdenCompra;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
-public class Controladora {
+public class Controladora implements Serializable {
     private static Controladora instance = null;
     private Map<String, Cliente> clientes;
     private Map<Integer, Producto> productos;
@@ -19,65 +26,6 @@ public class Controladora {
         this.clientes = new TreeMap<String, Cliente>();
         this.productos = new TreeMap<Integer, Producto>();
         this.ordenes = new TreeMap<Integer, OrdenCompra>();
-        try {
-        	//  Datos para pruebas
-        	
-            //  Clientes 
-            this.crearCliente("1-1937-1210", "Andrea Ling", "andy3103@gmail.com");
-            this.crearCliente("7-2522-8816", "Javier Acosta", "javiacosta@hotmail.com");
-            this.crearCliente("5-3193-9237", "Lucía Berlanga", "bluci@gmail.com");
-            
-            // Productos
-            this.crearProducto("Papas Rojas", 150.5f, "kg", 850.00);
-            this.crearProducto("Cable Eléctrico", 45.0f, "m", 1200.00);
-            this.crearProducto("Tornillos 2 pulg", 500.0f, "unidades", 25.00);
-            this.crearProducto("Cinta Aislante", 20.0f, "unidades", 950.00);
-            
-            Cliente andrea = this.obtenerCliente("1-1937-1210");
-            Cliente javier = this.obtenerCliente("7-2522-8816");
-            
-            Producto papas = this.productos.get(1);
-            Producto cable = this.productos.get(2);
-            Producto tornillos = this.productos.get(3);
-            Producto cinta = this.productos.get(4);
-            
-            // ÓRDENES DE ANDREA LING 
-            
-            // Orden 1: Estado "Iniciada"
-            logica.OrdenCompra orden1 = new logica.OrdenCompra(andrea);
-            orden1.agregarLinea(papas, 5.0); 
-            orden1.agregarLinea(tornillos, 50.0); 
-            this.ordenes.put(orden1.getNumero(), orden1);
-            andrea.agregarOrden(orden1);
-            
-            // Orden 2: Estado "Terminada"
-            logica.OrdenCompra orden2 = new logica.OrdenCompra(andrea);
-            orden2.agregarLinea(cinta, 2.0); // 2 cintas aislantes
-            orden2.setEstado("Terminada");   
-            this.ordenes.put(orden2.getNumero(), orden2);
-            andrea.agregarOrden(orden2);
-            
-            // Orden 3: Estado "Pendiente"
-            logica.OrdenCompra orden3 = new logica.OrdenCompra(andrea);
-            orden3.agregarLinea(papas, 10.0); // 10 kg de papas adicionales
-            orden3.setEstado("Pendiente");   
-            this.ordenes.put(orden3.getNumero(), orden3);
-            andrea.agregarOrden(orden3);
-            
-            // ÓRDENES DE JAVIER ACOSTA
-            
-            // Orden 4: Estado "Pendiente"
-            logica.OrdenCompra orden4 = new logica.OrdenCompra(javier);
-            orden4.agregarLinea(cable, 12.5); 
-            orden4.setEstado("Pendiente"); 
-            this.ordenes.put(orden4.getNumero(), orden4);
-            javier.agregarOrden(orden4);
-            
-        }
-        catch (Exception e) {
-            System.out.println("Error inicializando datos: " + e.toString());
-        }
-
     }
 
     public static Controladora getInstance() {
@@ -298,4 +246,27 @@ public class Controladora {
         
         return false;
     }
- }
+    
+    public static void guardarDatos() throws java.io.IOException {
+		java.io.FileOutputStream file = new java.io.FileOutputStream("DatosTiendaWallRose.dat");
+		java.io.ObjectOutputStream stream = new java.io.ObjectOutputStream(file);		
+		stream.writeObject(instance); 		
+		stream.writeInt(logica.OrdenCompra.getConsecutivo());
+		stream.close();
+		file.close();
+	}
+
+	public static void cargarDatos() throws java.io.IOException, ClassNotFoundException {
+		try {
+			java.io.FileInputStream file = new java.io.FileInputStream("DatosTiendaWallRose.dat");
+			java.io.ObjectInputStream stream = new java.io.ObjectInputStream(file);
+			instance = (Controladora) stream.readObject(); 
+			int proximoConsecutivo = stream.readInt();
+			logica.OrdenCompra.setConsecutivo(proximoConsecutivo);
+			stream.close();
+			file.close();
+		} catch (java.io.FileNotFoundException e) {
+			System.out.println("Archivo de datos no encontrado");
+		}
+	}
+}

@@ -263,7 +263,7 @@ public class VentanaInicial {
 		int numeroOrden = Integer.parseInt(model.getValueAt(numeroFila, 0).toString());
 		
 		int respuesta = JOptionPane.showConfirmDialog(frmTiendaWallrose, 
-				"¿Está seguro de que desea eliminar la orden N° " + numeroOrden + "?", 
+				"¿Está seguro de que desea eliminar la orden" + numeroOrden + "?", 
 				"Confirmar", JOptionPane.YES_NO_OPTION);
 				
 		if (respuesta == JOptionPane.YES_OPTION) {
@@ -275,7 +275,7 @@ public class VentanaInicial {
 				JOptionPane.showMessageDialog(frmTiendaWallrose, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
-	}	
+	}
 
 	/**
 	 * Create the application.
@@ -373,10 +373,20 @@ public class VentanaInicial {
 		panelDeClientes.add(btnBorrarCliente);
 		
 		JButton btnCargarDatos = new JButton("Cargar Datos");
+		btnCargarDatos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cargarDatos();
+			}
+		});
 		btnCargarDatos.setBounds(478, 215, 108, 22);
 		panelDeClientes.add(btnCargarDatos);
 		
 		JButton btnGuardarDatos = new JButton("Guardar Datos");
+		btnGuardarDatos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				guardarDatos();
+			}
+		});
 		btnGuardarDatos.setBounds(478, 257, 108, 22);
 		panelDeClientes.add(btnGuardarDatos);
 		
@@ -520,5 +530,29 @@ public class VentanaInicial {
 		});
 		btnBorrarProducto.setBounds(480, 117, 94, 22);
 		panelDeProductos.add(btnBorrarProducto);
+	}
+	
+	private void cargarDatos() {
+		try {
+			Controladora.cargarDatos(); 
+			cargarClientes();
+			cargarProductos();
+			cargarOrdenes();
+			
+			JOptionPane.showMessageDialog(frmTiendaWallrose, "Datos cargados", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(frmTiendaWallrose, "Error al cargar los datos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+	}
+
+	private void guardarDatos() {
+		try {
+			Controladora.guardarDatos();
+			JOptionPane.showMessageDialog(frmTiendaWallrose, "Datos guardados", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(frmTiendaWallrose, "Error al guardar los datos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
 	}
 }

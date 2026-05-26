@@ -128,12 +128,12 @@ public class InformacionCliente extends JDialog {
 		contentPanel.add(lblIDCliente);
 		
 		lblIdentificacionCliente = new JLabel("---");
-		lblIdentificacionCliente.setBounds(78, 11, 122, 14);
+		lblIdentificacionCliente.setBounds(99, 11, 122, 14);
 		contentPanel.add(lblIdentificacionCliente);
 		
 		JLabel lblNombreCliente = new JLabel("Nombre:");
 		lblNombreCliente.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblNombreCliente.setBounds(10, 30, 57, 14);
+		lblNombreCliente.setBounds(10, 30, 79, 14);
 		contentPanel.add(lblNombreCliente);
 		
 		JLabel lblEmailCliente = new JLabel("Email:");
@@ -142,16 +142,16 @@ public class InformacionCliente extends JDialog {
 		contentPanel.add(lblEmailCliente);
 		
 		lblNombreDelCliente = new JLabel("---");
-		lblNombreDelCliente.setBounds(78, 30, 219, 14);
+		lblNombreDelCliente.setBounds(99, 30, 219, 14);
 		contentPanel.add(lblNombreDelCliente);
 		
 		lblEmailDelCliente = new JLabel("---");
-		lblEmailDelCliente.setBounds(78, 49, 160, 14);
+		lblEmailDelCliente.setBounds(99, 49, 160, 14);
 		contentPanel.add(lblEmailDelCliente);
 		
 		JLabel lblListaOrdenesCliente = new JLabel("Lista de órdenes:");
 		lblListaOrdenesCliente.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblListaOrdenesCliente.setBounds(10, 84, 111, 14);
+		lblListaOrdenesCliente.setBounds(10, 84, 146, 14);
 		contentPanel.add(lblListaOrdenesCliente);
 		
 		JScrollPane scrollPane_OrdenesCliente = new JScrollPane();
@@ -217,7 +217,7 @@ public class InformacionCliente extends JDialog {
 		
 		JLabel lblPendiente = new JLabel("Total pendiente: ");
 		lblPendiente.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblPendiente.setBounds(10, 276, 99, 14);
+		lblPendiente.setBounds(10, 276, 105, 14);
 		contentPanel.add(lblPendiente);
 		
 		lblTotalPendiente = new JLabel("---");

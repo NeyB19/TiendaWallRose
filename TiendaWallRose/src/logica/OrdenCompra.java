@@ -1,9 +1,10 @@
 package logica;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class OrdenCompra {
+public class OrdenCompra implements Serializable {
     private static int consecutivo = 1;
     private int numero;
     private LocalDateTime fecha;
@@ -105,6 +106,14 @@ public class OrdenCompra {
         }
         Linea lineaEncontrada = this.lineas.get(numeroLinea);
         return lineaEncontrada;
+    }
+    
+    public static int getConsecutivo() {
+        return consecutivo;
+    }
+
+    public static void setConsecutivo(int nuevoConsecutivo) {
+        consecutivo = nuevoConsecutivo;
     }
     
     public String toString() {

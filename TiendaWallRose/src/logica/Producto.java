@@ -1,6 +1,8 @@
 package logica;
 
-public class Producto {
+import java.io.Serializable;
+
+public class Producto implements Serializable {
     private static int consecutivo = 1;
     private int codigoProducto;
     private String nombre;

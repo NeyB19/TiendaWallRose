@@ -59,19 +59,19 @@ public class AgregarEditarCliente extends JDialog {
 		{
 			JLabel lblIdentificacion = new JLabel("ID:");
 			lblIdentificacion.setFont(new Font("Tahoma", Font.BOLD, 11));
-			lblIdentificacion.setBounds(78, 48, 48, 14);
+			lblIdentificacion.setBounds(68, 48, 48, 14);
 			contentPanel.add(lblIdentificacion);
 		}
 		{
 			JLabel lblNombre = new JLabel("Nombre:");
 			lblNombre.setFont(new Font("Tahoma", Font.BOLD, 11));
-			lblNombre.setBounds(78, 92, 48, 14);
+			lblNombre.setBounds(68, 92, 68, 14);
 			contentPanel.add(lblNombre);
 		}
 		{
 			JLabel lblEmail = new JLabel("Email:");
 			lblEmail.setFont(new Font("Tahoma", Font.BOLD, 11));
-			lblEmail.setBounds(78, 142, 48, 14);
+			lblEmail.setBounds(68, 142, 48, 14);
 			contentPanel.add(lblEmail);
 		}
 		

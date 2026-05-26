@@ -1,6 +1,8 @@
 package logica;
 
-public class Linea {
+import java.io.Serializable;
+
+public class Linea implements Serializable {
     private double cantidad;
     private Producto producto;
 
