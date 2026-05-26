@@ -19,6 +19,69 @@ public class Controladora {
         this.clientes = new TreeMap<String, Cliente>();
         this.productos = new TreeMap<Integer, Producto>();
         this.ordenes = new TreeMap<Integer, OrdenCompra>();
+        try {
+            // --- 1. Datos Semilla: Clientes ---
+            this.crearCliente("1-1937-1210", "Andrea Ling", "andy3103@gmail.com");
+            this.crearCliente("7-2522-8816", "Javier Acosta", "javiacosta@hotmail.com");
+            this.crearCliente("5-3193-9237", "Lucía Berlanga", "bluci@gmail.com");
+            
+            // --- 2. Datos Semilla: Productos ---
+            this.crearProducto("Papas Rojas", 150.5f, "kg", 850.00);
+            this.crearProducto("Cable Eléctrico", 45.0f, "m", 1200.00);
+            this.crearProducto("Tornillos 2 pulg", 500.0f, "unidades", 25.00);
+            this.crearProducto("Cinta Aislante", 20.0f, "unidades", 950.00);
+            
+            // --- 3. Datos Semilla: Instancias para armar las líneas ---
+            Cliente andrea = this.obtenerCliente("1-1937-1210");
+            Cliente javier = this.obtenerCliente("7-2522-8816");
+            
+            Producto papas = this.productos.get(1);
+            Producto cable = this.productos.get(2);
+            Producto tornillos = this.productos.get(3);
+            Producto cinta = this.productos.get(4);
+            
+            // ==========================================
+            // ÓRDENES DE ANDREA LING (Productora de 3 estados)
+            // ==========================================
+            
+            // Orden 1: Estado "Iniciada"
+            logica.OrdenCompra orden1 = new logica.OrdenCompra(andrea);
+            orden1.agregarLinea(papas, 5.0); 
+            orden1.agregarLinea(tornillos, 50.0); 
+            this.ordenes.put(orden1.getNumero(), orden1);
+            andrea.agregarOrden(orden1);
+            
+            // Orden 2: Estado "Terminada"
+            logica.OrdenCompra orden2 = new logica.OrdenCompra(andrea);
+            orden2.agregarLinea(cinta, 2.0); // 2 cintas aislantes
+            orden2.setEstado("Terminada");   // Forzamos el estado a Terminada
+            this.ordenes.put(orden2.getNumero(), orden2);
+            andrea.agregarOrden(orden2);
+            
+            // Orden 3: Estado "Pendiente"
+            logica.OrdenCompra orden3 = new logica.OrdenCompra(andrea);
+            orden3.agregarLinea(papas, 10.0); // 10 kg de papas adicionales
+            orden3.setEstado("Pendiente");   // Forzamos el estado a Pendiente
+            this.ordenes.put(orden3.getNumero(), orden3);
+            andrea.agregarOrden(orden3);
+            
+            // ==========================================
+            // ÓRDENES DE JAVIER ACOSTA
+            // ==========================================
+            
+            // Orden 4: Estado "Pendiente"
+            logica.OrdenCompra orden4 = new logica.OrdenCompra(javier);
+            orden4.agregarLinea(cable, 12.5); 
+            orden4.setEstado("Pendiente"); 
+            this.ordenes.put(orden4.getNumero(), orden4);
+            javier.agregarOrden(orden4);
+            
+            System.out.println("Controladora: ¡Estructura completa de órdenes semilla cargada!");
+        }
+        catch (Exception e) {
+            System.out.println("Error inicializando datos semilla: " + e.toString());
+        }
+
     }
 
     public static Controladora getInstance() {

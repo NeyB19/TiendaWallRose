@@ -9,9 +9,21 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
+
+import control.Controladora;
+import logica.Cliente;
+
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.util.List;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class VentanaInicial {
 
@@ -19,6 +31,11 @@ public class VentanaInicial {
 	private JTable tablaClientes;
 	private JTable tablaOrdenes;
 	private JTable tablaProductos;
+	private JScrollPane scrollPane_Clientes;
+	private JButton btnAgregarCliente;
+	private JButton btnVerCliente;
+	private JButton btnEditarCliente;
+	private JButton btnBorrarCliente;
 
 	/**
 	 * Launch the application.
@@ -34,6 +51,86 @@ public class VentanaInicial {
 				}
 			}
 		});
+		
+	}
+	public void cargarClientes() {
+		Controladora control = Controladora.getInstance();
+		DefaultTableModel model = (DefaultTableModel) tablaClientes.getModel();
+		model.setRowCount(0);
+		List<Cliente> listaClientes = control.obtenerListadoClientes();
+		for (Cliente cliente : listaClientes) {
+			Object[] fila = new Object[] {cliente.getId(), cliente.getNombre(), cliente.getEmail()};
+			model.addRow(fila);
+		}	
+	}
+	
+	private void verCliente() {
+		int numeroFila = tablaClientes.getSelectedRow();
+		if (numeroFila == -1) {
+			javax.swing.JOptionPane.showMessageDialog(
+					frmTiendaWallrose, "Debe seleccionar un cliente.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+		} else {
+			DefaultTableModel model = (DefaultTableModel) tablaClientes.getModel();
+			String idCliente = (String) model.getValueAt(numeroFila, 0);
+				
+			InformacionCliente ventanaInformacion = new InformacionCliente(idCliente);
+			ventanaInformacion.setVisible(true);
+		}
+	}
+	private void borrarCliente() {
+		int numeroFila = tablaClientes.getSelectedRow();
+		if (numeroFila == -1) {
+			JOptionPane.showMessageDialog(frmTiendaWallrose, "Debe seleccionar un cliente.", "Error", JOptionPane.ERROR_MESSAGE);
+		} else {
+			DefaultTableModel model = (DefaultTableModel)tablaClientes.getModel();
+			String idCliente = (String)model.getValueAt(numeroFila, 0);
+			String nombreCliente = (String)model.getValueAt(numeroFila, 1);
+			
+			int respuesta = JOptionPane.showConfirmDialog(frmTiendaWallrose,"Se eliminará la información del cliente " + nombreCliente + " (" + idCliente + ") y todas sus órdenes asociadas.",
+					"Confirmar", JOptionPane.YES_NO_OPTION);
+					
+			if (respuesta == JOptionPane.YES_OPTION) {
+				Controladora control = Controladora.getInstance();
+				try {
+					control.borrarCliente(idCliente);
+					cargarClientes();
+					
+					JOptionPane.showMessageDialog(frmTiendaWallrose, "Cliente eliminado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+				}
+				catch (Exception e) {
+					JOptionPane.showMessageDialog(frmTiendaWallrose, "Error al borrar cliente: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		}
+	}
+	
+	public void agregarCliente() {
+		AgregarEditarCliente ventanaAgregar = new AgregarEditarCliente(this, true);
+		ventanaAgregar.setTitle("Agregar Cliente");
+		ventanaAgregar.setVisible(true);
+	}
+
+	public void editarCliente() {
+		int numeroFila = tablaClientes.getSelectedRow();
+		if (numeroFila == -1) {
+			JOptionPane.showMessageDialog(frmTiendaWallrose, "Debe seleccionar un cliente.", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		DefaultTableModel model = (DefaultTableModel) tablaClientes.getModel();
+		String id = (String) model.getValueAt(numeroFila, 0);
+		String nombre = (String) model.getValueAt(numeroFila, 1);
+		String email = (String) model.getValueAt(numeroFila, 2);
+		
+		AgregarEditarCliente ventanaEditar = new AgregarEditarCliente(this, false);
+		ventanaEditar.setTitle("Editar Cliente");
+		
+		ventanaEditar.getTextID().setText(id);
+		ventanaEditar.getTextID().setEditable(false);
+		ventanaEditar.getTextNombre().setText(nombre);
+		ventanaEditar.getTextEmail().setText(email);
+		
+		ventanaEditar.setVisible(true);
 	}
 
 	/**
@@ -58,10 +155,16 @@ public class VentanaInicial {
 		frmTiendaWallrose.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		
 		JPanel panelDeClientes = new JPanel();
+		panelDeClientes.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				cargarClientes();
+			}
+		});
 		tabbedPane.addTab("Clientes", null, panelDeClientes, null);
 		panelDeClientes.setLayout(null);
 		
-		JScrollPane scrollPane_Clientes = new JScrollPane();
+		scrollPane_Clientes = new JScrollPane();
 		scrollPane_Clientes.setBounds(10, 11, 458, 282);
 		panelDeClientes.add(scrollPane_Clientes);
 		
@@ -85,21 +188,49 @@ public class VentanaInicial {
 		tablaClientes.getColumnModel().getColumn(2).setPreferredWidth(165);
 		scrollPane_Clientes.setViewportView(tablaClientes);
 		
-		JButton btnAgregarCliente = new JButton("Agregar");
+		btnAgregarCliente = new JButton("Agregar");
+		btnAgregarCliente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				agregarCliente();
+			}
+		});
 		btnAgregarCliente.setBounds(478, 51, 94, 22);
 		panelDeClientes.add(btnAgregarCliente);
 		
-		JButton btnVerCliente = new JButton("Ver");
+		btnVerCliente = new JButton("Ver");
+		btnVerCliente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				verCliente();
+			}
+		});
 		btnVerCliente.setBounds(478, 84, 94, 22);
 		panelDeClientes.add(btnVerCliente);
 		
-		JButton btnEditarCliente = new JButton("Editar");
+		btnEditarCliente = new JButton("Editar");
+		btnEditarCliente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				editarCliente();
+			}
+		});
 		btnEditarCliente.setBounds(478, 117, 94, 22);
 		panelDeClientes.add(btnEditarCliente);
 		
-		JButton btnBorrarCliente = new JButton("Borrar");
+		btnBorrarCliente = new JButton("Borrar");
+		btnBorrarCliente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				borrarCliente();
+			}
+		});
 		btnBorrarCliente.setBounds(478, 150, 94, 22);
 		panelDeClientes.add(btnBorrarCliente);
+		
+		JButton btnCargarDatos = new JButton("Cargar Datos");
+		btnCargarDatos.setBounds(478, 215, 108, 22);
+		panelDeClientes.add(btnCargarDatos);
+		
+		JButton btnGuardarDatos = new JButton("Guardar Datos");
+		btnGuardarDatos.setBounds(478, 257, 108, 22);
+		panelDeClientes.add(btnGuardarDatos);
 		
 		JPanel panelDeOrdenes = new JPanel();
 		tabbedPane.addTab("Órdenes de Compra", null, panelDeOrdenes, null);
@@ -114,7 +245,7 @@ public class VentanaInicial {
 			new Object[][] {
 			},
 			new String[] {
-				"N\u00FAmero", "Fecha", "Estado"
+				"Numero", "Fecha", "Estado"
 			}
 		) {
 			Class[] columnTypes = new Class[] {
