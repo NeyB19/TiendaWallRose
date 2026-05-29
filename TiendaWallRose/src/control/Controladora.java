@@ -283,6 +283,7 @@ public class Controladora implements Serializable {
 		java.io.ObjectOutputStream stream = new java.io.ObjectOutputStream(file);		
 		stream.writeObject(instance); 		
 		stream.writeInt(logica.OrdenCompra.getConsecutivo());
+		stream.writeInt(logica.Producto.getConsecutivo());
 		stream.close();
 		file.close();
 	}
@@ -294,6 +295,8 @@ public class Controladora implements Serializable {
 			instance = (Controladora) stream.readObject(); 
 			int proximoConsecutivo = stream.readInt();
 			logica.OrdenCompra.setConsecutivo(proximoConsecutivo);
+			int proximoConsecutivoProd = stream.readInt();
+			logica.Producto.setConsecutivo(proximoConsecutivoProd);
 			stream.close();
 			file.close();
 		} catch (java.io.FileNotFoundException e) {

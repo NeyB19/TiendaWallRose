@@ -3,6 +3,7 @@ package logica;
 import java.io.Serializable;
 
 public class Producto implements Serializable {
+	private static final long serialVersionUID = 1L;
     private static int consecutivo = 1;
     private int codigoProducto;
     private String nombre;
@@ -62,6 +63,14 @@ public class Producto implements Serializable {
             return;
         }
         throw new Exception("Error: El precio debe ser un valor mayor a cero.");
+    }
+    
+    public static int getConsecutivo() {
+        return consecutivo; 
+    }
+
+    public static void setConsecutivo(int nuevoConsecutivo) {
+        consecutivo = nuevoConsecutivo;
     }
 
     public String toString() {
