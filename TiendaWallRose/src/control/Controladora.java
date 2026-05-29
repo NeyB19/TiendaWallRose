@@ -50,16 +50,23 @@ public class Controladora implements Serializable {
     }
 
     public void crearCliente(String id, String nombre, String email) throws Exception {
+        Cliente auxiliar = new Cliente(id, nombre, email);  
+        // validar email
+        if (!auxiliar.validarEmail(email)) {
+            throw new Exception("Error: El formato del correo electrónico no es válido");
+        }
         if (!this.clientes.containsKey(id)) {
-            Cliente nuevo = new Cliente(id, nombre, email);
-            this.clientes.put(id, nuevo);
+            this.clientes.put(id, auxiliar);
             return;
         }
         throw new Exception("Error: Ya existe un cliente con esa ID");
     }
 
     public void actualizarCliente(String id, String nombre, String email) throws Exception {
-        Cliente cliente = obtenerCliente(id);
+        Cliente cliente = obtenerCliente(id);       
+        if (!cliente.validarEmail(email)) {
+            throw new Exception("Error: El formato del correo electrónico no es válido.");
+        }
         cliente.setNombre(nombre);
         cliente.setEmail(email);
     }
@@ -137,7 +144,12 @@ public class Controladora implements Serializable {
     }
 
     public void borrarOrdenCompra(int numero) throws Exception {
-        OrdenCompra orden = obtenerOrden(numero);
+    	OrdenCompra orden = obtenerOrden(numero);
+    	// restaurar inventario
+        for (Linea linea : orden.getLineas()) {
+            Producto p = linea.getProducto();
+            p.setExistencias((float) (p.getExistencias() + linea.getCantidad()));
+        }
         orden.getCliente().borrarOrden(numero);
         this.ordenes.remove(numero);
     }
@@ -156,22 +168,41 @@ public class Controladora implements Serializable {
         OrdenCompra orden = obtenerOrden(numeroOrden);
         Producto producto = obtenerProducto(codigoProducto);
         orden.agregarLinea(producto, cantidad);
+
+        // Descontar del inventario
+        float nuevasExistencias = (float) (producto.getExistencias() - cantidad);
+        producto.setExistencias(nuevasExistencias);
     }
 
     public void actualizarLinea(int numeroOrden, int numeroLinea, int codigoProducto, double cantidad) throws Exception {
         OrdenCompra orden = obtenerOrden(numeroOrden);
         Producto producto = obtenerProducto(codigoProducto);
-        
         if (numeroLinea >= 0 && numeroLinea < orden.getLineas().size()) {
+            Linea lineaVieja = orden.getLineas().get(numeroLinea);
+            double cantidadAnterior = lineaVieja.getCantidad();
+            
+            producto.setExistencias((float) (producto.getExistencias() + cantidadAnterior));
             orden.getLineas().remove(numeroLinea);
             orden.getLineas().add(numeroLinea, new Linea(producto, cantidad));
+
+            producto.setExistencias((float) (producto.getExistencias() - cantidad));
             return;
         }
         throw new Exception("Error: La línea es inválida");
     }
-
     public void borrarLinea(int numeroOrden, int numeroLinea) throws Exception {
-        obtenerOrden(numeroOrden).borrarLinea(numeroLinea);
+    	OrdenCompra orden = obtenerOrden(numeroOrden);
+        
+        if (numeroLinea >= 0 && numeroLinea < orden.getLineas().size()) {
+            Linea lineaAEliminar = orden.getLineas().get(numeroLinea);
+            Producto producto = lineaAEliminar.getProducto();
+            
+            // restaurar el inventario
+            producto.setExistencias((float) (producto.getExistencias() + lineaAEliminar.getCantidad()));
+            orden.borrarLinea(numeroLinea);
+            return;
+        }
+        throw new Exception("Error: Línea inválida");
     }
 
     public List<Linea> obtenerlineasOrden(int numero) throws Exception {
